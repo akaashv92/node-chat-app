@@ -13,16 +13,15 @@ var server = http.createServer(app);
 var io = socketIO(server);
 
 io.on('connection', (socket) => {
-  console.log('New user conencted');
-
-  socket.emit('newMessage',{
-    from : 'Mike',
-    text : 'Yo from server.js',
-    createdAt : '123'
-  });
+  console.log('New user connected');
 
   socket.on('createMessage', (message) => {
     console.log(message);
+    io.emit('newMessage' , {
+      from : message.from,
+      text : message.text,
+      createdAt : new Date().getTime()
+    });
   });
 
   socket.on('disconnect', () => {
@@ -37,4 +36,4 @@ app.use(express.static(publicPath));
 
 server.listen(PORT, () => {
   console.log('Server running on port : ' +PORT);
-})
+});
